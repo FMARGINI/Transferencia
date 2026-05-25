@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DVARPR-1 · Visão Gerencial</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #F0F4F8;
+    color: #1A202C;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, #0F2942 0%, #1A3A5C 60%, #1E4976 100%);
+    padding: 48px 60px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 30%;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+  }
+  .header-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #63B3ED;
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1.25;
+    max-width: 780px;
+    margin-bottom: 16px;
+  }
+  .header h1 span { color: #63B3ED; }
+  .header-desc {
+    font-size: 14px;
+    color: #A0B8CC;
+    max-width: 680px;
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+  .header-pills {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #CBD5E0;
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 40px 60px; }
+
+  /* ── SECTION TITLE ── */
+  .section { margin-top: 44px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .section-badge {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .section-badge.blue  { background: #EBF8FF; }
+  .section-badge.amber { background: #FFFBEB; }
+  .section-badge.green { background: #F0FFF4; }
+  .section-badge.slate { background: #F7FAFC; }
+  .section-label {
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #4A5568;
+  }
+  .section-line { flex: 1; height: 1px; background: #E2E8F0; }
+
+  /* ── EXEC TABLE ── */
+  .exec-table-wrap {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  }
+  .exec-table { width: 100%; border-collapse: collapse; }
+  .exec-table thead tr { background: #0F2942; }
+  .exec-table thead th {
+    padding: 14px 18px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #A0B8CC;
+    text-align: left;
+  }
+  .exec-table tbody tr { border-bottom: 1px solid #EDF2F7; transition: background 0.15s; }
+  .exec-table tbody tr:last-child { border-bottom: none; }
+  .exec-table tbody tr:hover { background: #F7FAFC; }
+  .exec-table td { padding: 14px 18px; font-size: 13px; color: #2D3748; vertical-align: middle; }
+  .exec-table td strong { font-weight: 700; color: #1A202C; }
+
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .tag-historia { background: #EBF8FF; color: #2B6CB0; }
+  .tag-apoio    { background: #FFFBEB; color: #92400E; }
+  .tag-doc      { background: #F0FFF4; color: #276749; }
+
+  .dep-badge {
+    display: inline-block;
+    background: #EDF2F7;
+    color: #4A5568;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 1px;
+  }
+
+  /* ── CARDS ── */
+  .cards-grid {
+    display: grid;
+    gap: 18px;
+  }
+  .two-col { grid-template-columns: 1fr 1fr; }
+  .one-col  { grid-template-columns: 1fr; }
+
+  .card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    border-top: 4px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .card.c-blue   { border-top-color: #3182CE; }
+  .card.c-amber  { border-top-color: #D69E2E; }
+  .card.c-green  { border-top-color: #38A169; }
+
+  .card-header { margin-bottom: 16px; }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .card-type-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .c-blue  .card-type-label { color: #2B6CB0; }
+  .c-amber .card-type-label { color: #92400E; }
+  .c-green .card-type-label { color: #276749; }
+  .card-id-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #A0AEC0;
+    background: #F7FAFC;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #1A202C;
+    line-height: 1.35;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .info-item { display: flex; flex-direction: column; gap: 3px; }
+  .info-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #A0AEC0;
+  }
+  .info-value { font-size: 12.5px; color: #2D3748; font-weight: 500; }
+
+  .resp-block {
+    background: #F7FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-top: 4px;
+  }
+  .resp-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #A0AEC0;
+    margin-bottom: 3px;
+  }
+  .resp-main {
+    font-size: 14px;
+    font-weight: 800;
+    color: #1A202C;
+  }
+  .resp-sub {
+    font-size: 12px;
+    color: #718096;
+    margin-top: 2px;
+  }
+
+  .impact-block {
+    background: #FFF5F5;
+    border: 1px solid #FED7D7;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-top: 12px;
+  }
+  .impact-title {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #C53030;
+    margin-bottom: 5px;
+  }
+  .impact-text { font-size: 12.5px; color: #742A2A; line-height: 1.6; }
+
+  .deliverable-block {
+    background: #F7FAFC;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 12.5px;
+    color: #2D3748;
+    line-height: 1.6;
+  }
+  .deliverable-block strong { display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #A0AEC0; margin-bottom: 5px; }
+
+  /* ── DEPENDENCY FLOW ── */
+  .dep-container {
+    background: #fff;
+    border-radius: 14px;
+    padding: 32px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  }
+  .dep-section-label {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #A0AEC0;
+    margin-bottom: 16px;
+  }
+  .flow-track {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 24px;
+  }
+  .flow-node {
+    border-radius: 10px;
+    padding: 12px 20px;
+    min-width: 160px;
+    text-align: center;
+  }
+  .flow-node.primary {
+    background: #0F2942;
+    border: 2px solid #2B6CB0;
+  }
+  .flow-node.primary .fn-id   { color: #63B3ED; font-size: 10px; font-weight: 700; margin-bottom: 4px; }
+  .flow-node.primary .fn-name { color: #fff; font-size: 12px; font-weight: 700; line-height: 1.3; }
+
+  .flow-node.parallel-amber {
+    background: #FFFBEB;
+    border: 2px solid #F6E05E;
+  }
+  .flow-node.parallel-amber .fn-id   { color: #D69E2E; font-size: 10px; font-weight: 700; margin-bottom: 4px; }
+  .flow-node.parallel-amber .fn-name { color: #744210; font-size: 12px; font-weight: 700; line-height: 1.3; }
+
+  .flow-node.parallel-green {
+    background: #F0FFF4;
+    border: 2px solid #9AE6B4;
+  }
+  .flow-node.parallel-green .fn-id   { color: #276749; font-size: 10px; font-weight: 700; margin-bottom: 4px; }
+  .flow-node.parallel-green .fn-name { color: #1C4532; font-size: 12px; font-weight: 700; line-height: 1.3; }
+
+  .flow-arrow {
+    font-size: 22px;
+    color: #63B3ED;
+    font-weight: 300;
+    padding: 0 4px;
+  }
+  .flow-note {
+    font-size: 11.5px;
+    color: #718096;
+    font-style: italic;
+    padding: 8px 14px;
+    background: #F7FAFC;
+    border-radius: 6px;
+    border-left: 3px solid #CBD5E0;
+    margin-left: 12px;
+  }
+
+  .critical-banner {
+    background: linear-gradient(135deg, #0F2942, #1A3A5C);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-top: 20px;
+    color: #A0B8CC;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .critical-banner strong { color: #63B3ED; }
+
+  /* ── ROTINAS ── */
+  .rotinas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .rotina-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    border: 1px solid #EDF2F7;
+  }
+  .rotina-icon {
+    width: 44px; height: 44px;
+    background: #0F2942;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800;
+    color: #63B3ED;
+    flex-shrink: 0;
+  }
+  .rotina-name { font-size: 14px; font-weight: 800; color: #1A202C; margin-bottom: 3px; }
+  .rotina-desc { font-size: 12px; color: #718096; line-height: 1.5; margin-bottom: 8px; }
+  .rotina-link a {
+    font-size: 12px;
+    font-weight: 700;
+    color: #3182CE;
+    text-decoration: none;
+  }
+  .rotina-link a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════ HEADER ══ -->
+<div class="header">
+  <div class="header-eyebrow">Visão Gerencial · Épico · DVARPR-1</div>
+  <h1>11.1 — Consulta de Disponibilidade e<br><span>Transferência de Produtos entre Filiais</span></h1>
+  <p class="header-desc">
+    Quando uma loja não possui estoque local, o vendedor pode consultar a disponibilidade em outras filiais via PDV Omni e solicitar uma transferência. Todo o fluxo opera no ERP Protheus com rotinas padrão e customizações pontuais.
+  </p>
+  <div class="header-pills">
+    <span class="pill">📦 2 Histórias de Produto</span>
+    <span class="pill">🤝 2 Apoios a Times Parceiros</span>
+    <span class="pill">📄 1 Documentação TDN</span>
+    <span class="pill">⚙️ Fluxo majoritariamente padrão ERP</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══════════════════════════════════════════ RESUMO EXECUTIVO ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-badge slate">📋</div>
+      <span class="section-label">Resumo Executivo</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="exec-table-wrap">
+      <table class="exec-table">
+        <thead>
+          <tr>
+            <th style="width:110px;">Issue</th>
+            <th style="width:110px;">Tipo</th>
+            <th>Título</th>
+            <th style="width:200px;">Responsável</th>
+            <th style="width:140px;">Depende de</th>
+            <th style="width:140px;">Bloqueia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>DVARPR-2</strong></td>
+            <td><span class="tag tag-historia">História</span></td>
+            <td>Criação do Cadastro (ATUSX) — Tabelas MA1 e MA2</td>
+            <td><strong>Time de Produto</strong></td>
+            <td><span class="dep-badge">—</span></td>
+            <td><span class="dep-badge">DVARPR-378</span> <span class="dep-badge">DVARPR-379</span></td>
+          </tr>
+          <tr>
+            <td><strong>DVARPR-378</strong></td>
+            <td><span class="tag tag-historia">História</span></td>
+            <td>Criação da Interface MVC — Cadastro de Filiais</td>
+            <td><strong>Time de Produto</strong></td>
+            <td><span class="dep-badge">DVARPR-2</span></td>
+            <td><span class="dep-badge">DVARPR-379</span></td>
+          </tr>
+          <tr>
+            <td><strong>DVARPR-379</strong></td>
+            <td><span class="tag tag-apoio">Apoio</span></td>
+            <td>Repasse ao Time de Integração (PSH)</td>
+            <td><strong>PSH</strong> · repasse: Fábio</td>
+            <td><span class="dep-badge">DVARPR-378</span></td>
+            <td><span class="dep-badge">—</span></td>
+          </tr>
+          <tr>
+            <td><strong>DVARPR-380</strong></td>
+            <td><span class="tag tag-apoio">Apoio</span></td>
+            <td>Repasse de Escopo à TOTVS Norte</td>
+            <td><strong>TOTVS Norte</strong> · repasse: Fábio</td>
+            <td><span class="dep-badge">MATA311 configurada</span></td>
+            <td><span class="dep-badge">—</span></td>
+          </tr>
+          <tr>
+            <td><strong>DVARPR-381</strong></td>
+            <td><span class="tag tag-doc">Documentação</span></td>
+            <td>Transferência de Produtos entre Filiais — TDN</td>
+            <td><strong>Time de Produto</strong> · Fábio</td>
+            <td><span class="dep-badge">Fluxo estabilizado</span></td>
+            <td><span class="dep-badge">—</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ HISTÓRIAS ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-badge blue">🔷</div>
+      <span class="section-label" style="color:#2B6CB0;">Histórias de Desenvolvimento</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="cards-grid two-col">
+
+      <!-- DVARPR-2 -->
+      <div class="card c-blue">
+        <div class="card-header">
+          <div class="card-meta">
+            <span class="card-type-label">História</span>
+            <span class="card-id-label">DVARPR-2</span>
+          </div>
+          <div class="card-title">Criação do Cadastro (ATUSX) de Filiais Permitidas para Consulta de Estoque</div>
+        </div>
+
+        <div class="deliverable-block">
+          <strong>O que entrega</strong>
+          Tabelas MA1 (filial solicitante) e MA2 (filiais permitidas) criadas e disponíveis no Atusx, com todos os campos associados ao grupo de campos de filiais.
+        </div>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Bloqueia</span>
+            <span class="info-value"><span class="dep-badge">DVARPR-378</span> <span class="dep-badge">DVARPR-379</span></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Bloqueada por</span>
+            <span class="info-value" style="color:#A0AEC0; font-style:italic;">Nenhuma</span>
+          </div>
+        </div>
+
+        <div class="resp-block">
+          <div class="resp-label">Responsável</div>
+          <div class="resp-main">Time de Produto</div>
+        </div>
+
+        <div class="impact-block">
+          <div class="impact-title">⚠ Impacto se não entregue</div>
+          <div class="impact-text">Pré-requisito de toda a cadeia. Nenhuma outra entrega desta jornada pode ser iniciada sem as tabelas criadas no Atusx.</div>
+        </div>
+      </div>
+
+      <!-- DVARPR-378 -->
+      <div class="card c-blue">
+        <div class="card-header">
+          <div class="card-meta">
+            <span class="card-type-label">História</span>
+            <span class="card-id-label">DVARPR-378</span>
+          </div>
+          <div class="card-title">Criação da Interface MVC — Cadastro de Filiais Permitidas para Consulta de Estoque</div>
+        </div>
+
+        <div class="deliverable-block">
+          <strong>O que entrega</strong>
+          Rotina MVC com tela cabeçalho × itens (MA1/MA2), operações de incluir, alterar, excluir e visualizar, validações de duplicidade e F3 de lookup para filiais.
+        </div>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Bloqueada por</span>
+            <span class="info-value"><span class="dep-badge">DVARPR-2</span></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Bloqueia</span>
+            <span class="info-value"><span class="dep-badge">DVARPR-379</span></span>
+          </div>
+        </div>
+
+        <div class="resp-block">
+          <div class="resp-label">Responsável</div>
+          <div class="resp-main">Time de Produto</div>
+        </div>
+
+        <div class="impact-block">
+          <div class="impact-title">⚠ Impacto se não entregue</div>
+          <div class="impact-text">O cadastro só poderia ser alimentado via SQL direto no banco — inviável em produção. Time PSH não consegue testar a API com dados reais.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ APOIOS ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-badge amber">🤝</div>
+      <span class="section-label" style="color:#92400E;">Apoio a Times Parceiros</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="cards-grid two-col">
+
+      <!-- DVARPR-379 -->
+      <div class="card c-amber">
+        <div class="card-header">
+          <div class="card-meta">
+            <span class="card-type-label">Apoio · Time de Integração</span>
+            <span class="card-id-label">DVARPR-379</span>
+          </div>
+          <div class="card-title">Repasse ao Time de Integração (PSH) — Dados filtrados de lojas consultadas</div>
+        </div>
+
+        <div class="deliverable-block">
+          <strong>O que entrega</strong>
+          Alinhamento técnico do contrato MA1/MA2 com o PSH + implementação do filtro por MA2_FILTRA na API + validação end-to-end com PDV Omni exibindo apenas filiais permitidas.
+        </div>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Bloqueada por</span>
+            <span class="info-value"><span class="dep-badge">DVARPR-378</span></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Bloqueia</span>
+            <span class="info-value" style="color:#A0AEC0; font-style:italic;">Nenhuma</span>
+          </div>
+        </div>
+
+        <div class="resp-block">
+          <div class="resp-label">Execução</div>
+          <div class="resp-main">Time de Integração (PSH)</div>
+          <div class="resp-sub">Repasse e acompanhamento: <strong>Fábio</strong></div>
+        </div>
+
+        <div class="impact-block">
+          <div class="impact-title">⚠ Impacto se não entregue</div>
+          <div class="impact-text">PDV Omni retorna estoque de todas as filiais, ignorando as regras operacionais configuradas no cadastro.</div>
+        </div>
+      </div>
+
+      <!-- DVARPR-380 -->
+      <div class="card c-amber">
+        <div class="card-header">
+          <div class="card-meta">
+            <span class="card-type-label">Apoio · TOTVS Norte</span>
+            <span class="card-id-label">DVARPR-380</span>
+          </div>
+          <div class="card-title">Repasse de Escopo à TOTVS Norte — Jornada 11</div>
+        </div>
+
+        <div class="deliverable-block">
+          <strong>Escopo da TOTVS Norte</strong>
+          <strong style="margin-top:8px;">1. Ponto de entrada MATA310</strong>
+          Tratamento de TES e preço para transferências entre filiais com CNPJs distintos.
+          <strong style="margin-top:8px;">2. Configuração WMS</strong>
+          Separação física via tabela NNS para itens com solicitação aprovada.
+        </div>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Bloqueada por</span>
+            <span class="info-value"><span class="dep-badge">MATA311 configurada</span></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Bloqueia</span>
+            <span class="info-value" style="color:#A0AEC0; font-style:italic;">Nenhuma</span>
+          </div>
+        </div>
+
+        <div class="resp-block">
+          <div class="resp-label">Execução</div>
+          <div class="resp-main">TOTVS Norte</div>
+          <div class="resp-sub">Repasse e acompanhamento: <strong>Fábio</strong></div>
+        </div>
+
+        <div class="impact-block">
+          <div class="impact-title">⚠ Impacto se não entregue</div>
+          <div class="impact-text">Filiais com CNPJs distintos terão tributação e custo incorretos. Separação no WMS não será acionada automaticamente após aprovação.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ DOCUMENTAÇÃO ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-badge green">📄</div>
+      <span class="section-label" style="color:#276749;">Documentação</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="card c-green">
+      <div class="card-header">
+        <div class="card-meta">
+          <span class="card-type-label">Documentação · TDN</span>
+          <span class="card-id-label">DVARPR-381</span>
+        </div>
+        <div class="card-title">Transferência de Produtos entre Filiais — Documentação Oficial</div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:4px;">
+        <div class="deliverable-block" style="margin:0;">
+          <strong>O que entrega</strong>
+          Página no TDN com visão geral, diagrama do fluxo, atores e responsabilidades, pré-requisitos de configuração, fluxo operacional passo a passo, links para rotinas padrão e seção de customizações da TOTVS Norte.
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="resp-block" style="margin:0;">
+            <div class="resp-label">Autor</div>
+            <div class="resp-main">Time de Produto · Fábio</div>
+          </div>
+          <div class="resp-block" style="margin:0;">
+            <div class="resp-label">Validação</div>
+            <div class="resp-main">TOTVS Norte + Consultoria</div>
+            <div class="resp-sub">Antes da publicação final</div>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Bloqueada por</span>
+            <span class="dep-badge" style="margin-top:4px;">Estabilização do fluxo</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="impact-block" style="margin-top:14px;">
+        <div class="impact-title">⚠ Impacto se não entregue</div>
+        <div class="impact-text">Cliente sem referência para configurar e operar a jornada de forma autônoma. Dependência contínua do time TOTVS para suporte em dúvidas operacionais básicas.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ DEPENDÊNCIAS ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-badge slate">🔗</div>
+      <span class="section-label">Cadeia de Dependências</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="dep-container">
+
+      <div class="dep-section-label">Caminho crítico</div>
+      <div class="flow-track">
+        <div class="flow-node primary">
+          <div class="fn-id">DVARPR-2</div>
+          <div class="fn-name">Tabelas MA1/MA2<br>(ATUSX)</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node primary">
+          <div class="fn-id">DVARPR-378</div>
+          <div class="fn-name">Interface MVC<br>de Cadastro</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node primary">
+          <div class="fn-id">DVARPR-379</div>
+          <div class="fn-name">Repasse PSH +<br>Validação API</div>
+        </div>
+      </div>
+
+      <div class="dep-section-label" style="margin-top:8px;">Paralelos (sem impacto no caminho crítico)</div>
+      <div class="flow-track" style="margin-bottom:12px;">
+        <div class="flow-node parallel-amber">
+          <div class="fn-id">DVARPR-380</div>
+          <div class="fn-name">Repasse TOTVS Norte</div>
+        </div>
+        <div class="flow-note">Pode ser iniciado assim que a MATA311 estiver configurada</div>
+      </div>
+      <div class="flow-track">
+        <div class="flow-node parallel-green">
+          <div class="fn-id">DVARPR-381</div>
+          <div class="fn-name">Documentação TDN</div>
+        </div>
+        <div class="flow-note">Recomendado após estabilização do fluxo completo</div>
+      </div>
+
+      <div class="critical-banner">
+        <strong>Caminho crítico:</strong> DVARPR-2 → DVARPR-378 → DVARPR-379. As iniciativas DVARPR-380 e DVARPR-381 correm em paralelo e não impactam o desenvolvimento principal do produto.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ ROTINAS ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-badge slate">📚</div>
+      <span class="section-label">Rotinas Padrão Referenciadas</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="rotinas-grid">
+
+      <div class="rotina-card">
+        <div class="rotina-icon">311</div>
+        <div>
+          <div class="rotina-name">MATA311</div>
+          <div class="rotina-desc">Controle de Transferência — criação, aprovação e efetivação de solicitações</div>
+          <div class="rotina-link"><a href="https://tdn.totvs.com/pages/viewpage.action?pageId=445673811" target="_blank">Acessar documentação no TDN →</a></div>
+        </div>
+      </div>
+
+      <div class="rotina-card">
+        <div class="rotina-icon">310</div>
+        <div>
+          <div class="rotina-name">MATA310</div>
+          <div class="rotina-desc">Transferências entre Filiais — movimentação de estoque e tratamento de custo</div>
+          <div class="rotina-link"><a href="https://tdn.totvs.com/pages/viewpage.action?pageId=306851017" target="_blank">Acessar documentação no TDN →</a></div>
+        </div>
+      </div>
+
+      <div class="rotina-card">
+        <div class="rotina-icon">094</div>
+        <div>
+          <div class="rotina-name">MATA094</div>
+          <div class="rotina-desc">Alçada de Aprovação / Liberação de Documentos — monitor de pendências</div>
+          <div class="rotina-link"><a href="https://tdn.totvs.com/pages/viewpage.action?pageId=804802719" target="_blank">Acessar documentação no TDN →</a></div>
+        </div>
+      </div>
+
+      <div class="rotina-card">
+        <div class="rotina-icon">EVT</div>
+        <div>
+          <div class="rotina-name">Event Viewer</div>
+          <div class="rotina-desc">Notificações automáticas por e-mail e SMS — eventos 065 e 075</div>
+          <div class="rotina-link"><a href="https://tdn.totvs.com/pages/releaseview.action?pageId=572490417" target="_blank">Acessar documentação no TDN →</a></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /container -->
+</body>
+</html>
